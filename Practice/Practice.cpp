@@ -37,28 +37,66 @@ int main()
         Point P3 = get_valid_coordinates("Point C");
     
         const Triangle triangle = Triangle(P1, P2, P3);
-        Triangle mmirrored_triangle = triangle.mirror_with_matrix(mirror_matrix);
+        std::cout << "Choose an operation:\n";
+        std::cout << "1. Move the triangle on a vector.\n";
+        std::cout << "2. Rotate the triangle.\n";
+        std::cout << "3. Mirror the triangle.\n";
+        int operation;
+        std::cin >> operation;
 
-        Vector vector_to_move;
-        std::cout << "Enter the x and y coordinates of the vector: ";
-        std::cin >> vector_to_move.x >> vector_to_move.y;
+        switch (operation)
+        {
+        case 1:
+        {
+            Vector vector_to_move;
+            std::cout << "Enter the x and y coordinates of the vector: ";
+            std::cin >> vector_to_move.x >> vector_to_move.y;
 
-        const Triangle moved_triangle = triangle.move(vector_to_move);
+            const Triangle moved_triangle = triangle.move(vector_to_move);
 
-        double angle_degrees;
-        std::cout << "Enter the angle (in degrees) to rotate the triangle: ";
-        std::cin >> angle_degrees;
+            std::cout << "Coordinates of the moved triangle:" << std::endl;
+            std::cout << "Point A: (" << moved_triangle.get_point1().x << ", " << moved_triangle.get_point1().y << ")" << std::endl;
+            std::cout << "Point B: (" << moved_triangle.get_point2().x << ", " << moved_triangle.get_point2().y << ")" << std::endl;
+            std::cout << "Point C: (" << moved_triangle.get_point3().x << ", " << moved_triangle.get_point3().y << ")" << std::endl;
+            break;
+        }
+        case 2:
+        {
+            double angle_degrees;
+            std::cout << "Enter the angle (in degrees) to rotate the triangle: ";
+            std::cin >> angle_degrees;
 
-        double angle_radians = angle_degrees * std::numbers::pi / 180.0;
+            double angle_radians = angle_degrees * std::numbers::pi / 180.0;
 
-        Point rotation_point = get_valid_coordinates("Rotation Point");
-        Point mirror_vector;
-        std::cout << "Enter the x and y coordinates of the mirror vector: ";
-        std::cin >> mirror_vector.x >> mirror_vector.y;
+            Point rotation_point = get_valid_coordinates("Rotation Point");
 
-        Triangle rotated_triangle = triangle.rotated(angle_radians, rotation_point);
+            Triangle rotated_triangle = triangle.rotate_with_matrix(angle_radians, rotation_point);
 
-        Triangle mirrored_triangle = triangle.mirror(mirror_vector);
+            std::cout << "Coordinates of the rotated triangle:" << std::endl;
+            std::cout << "Point A: (" << rotated_triangle.get_point1().x << ", " << rotated_triangle.get_point1().y << ")" << std::endl;
+            std::cout << "Point B: (" << rotated_triangle.get_point2().x << ", " << rotated_triangle.get_point2().y << ")" << std::endl;
+            std::cout << "Point C: (" << rotated_triangle.get_point3().x << ", " << rotated_triangle.get_point3().y << ")" << std::endl;
+            break;
+        }
+
+        case 3:
+        {
+            Point mirror_vector;
+            std::cout << "Enter the x and y coordinates of the mirror vector: ";
+            std::cin >> mirror_vector.x >> mirror_vector.y;
+
+            Triangle mirrored_triangle = triangle.mirror_with_matrix(mirror_matrix);
+
+            std::cout << "Coordinates of the mirrored triangle:" << std::endl;
+            std::cout << "Point A (Mirrored): (" << mirrored_triangle.get_point1().x << ", " << mirrored_triangle.get_point1().y << ")" << std::endl;
+            std::cout << "Point B (Mirrored): (" << mirrored_triangle.get_point2().x << ", " << mirrored_triangle.get_point2().y << ")" << std::endl;
+            std::cout << "Point C (Mirrored): (" << mirrored_triangle.get_point3().x << ", " << mirrored_triangle.get_point3().y << ")" << std::endl;
+            break;
+        }
+        default:
+            std::cout << "Invalid operation choice." << std::endl;
+            break;
+        }
 
         double side1 = 0;
         double side2 = 0;
@@ -77,37 +115,8 @@ int main()
         std::cout << "Perimeter: " << p << std::endl;
         std::cout << "Area: " << s << std::endl;
 
-        std::cout << "Coordinates of the moved triangle:" << std::endl;
-        Point moved_p1 = moved_triangle.get_point1();
-        Point moved_p2 = moved_triangle.get_point2();
-        Point moved_p3 = moved_triangle.get_point3();
-        std::cout << "Point A: (" << moved_p1.x << ", " << moved_p1.y << ")" << std::endl;
-        std::cout << "Point B: (" << moved_p2.x << ", " << moved_p2.y << ")" << std::endl;
-        std::cout << "Point C: (" << moved_p3.x << ", " << moved_p3.y << ")" << std::endl;
-
-        std::cout << "Coordinates of the rotated triangle:" << std::endl;
-        Point rotated_p1 = rotated_triangle.get_point1();
-        Point rotated_p2 = rotated_triangle.get_point2();
-        Point rotated_p3 = rotated_triangle.get_point3();
-        std::cout << "Point A: (" << rotated_p1.x << ", " << rotated_p1.y << ")" << std::endl;
-        std::cout << "Point B: (" << rotated_p2.x << ", " << rotated_p2.y << ")" << std::endl;
-        std::cout << "Point C: (" << rotated_p3.x << ", " << rotated_p3.y << ")" << std::endl;
-
-        std::cout << "Coordinates of the mirrored triangle:" << std::endl;
-        Point mirrored_p1 = mirrored_triangle.get_point1();
-        Point mirrored_p2 = mirrored_triangle.get_point2();
-        Point mirrored_p3 = mirrored_triangle.get_point3();
-        std::cout << "Point A (Mirrored): (" << mirrored_p1.x << ", " << mirrored_p1.y << ")" << std::endl;
-        std::cout << "Point B (Mirrored): (" << mirrored_p2.x << ", " << mirrored_p2.y << ")" << std::endl;
-        std::cout << "Point C (Mirrored): (" << mirrored_p3.x << ", " << mirrored_p3.y << ")" << std::endl;
-
-        std::cout << "Coordinates of the mirrored triangle:" << std::endl;
-        Point mmirrored_p1 = mmirrored_triangle.get_point1();
-        Point mmirrored_p2 = mmirrored_triangle.get_point2();
-        Point mmirrored_p3 = mmirrored_triangle.get_point3();
-        std::cout << "Point A (Mirrored): (" << mmirrored_p1.x << ", " << mmirrored_p1.y << ")" << std::endl;
-        std::cout << "Point B (Mirrored): (" << mmirrored_p2.x << ", " << mmirrored_p2.y << ")" << std::endl;
-        std::cout << "Point C (Mirrored): (" << mmirrored_p3.x << ", " << mmirrored_p3.y << ")" << std::endl;
+       
+        
 
         switch (type)
         {

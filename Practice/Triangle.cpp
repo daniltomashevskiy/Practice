@@ -33,6 +33,23 @@ Point get_valid_coordinates(const std::string& point_name)
     return P;
 }
 
+
+Point rotate_point(const Point& point, const double matrix[2][2], const Point& rotation_point)
+{
+    double new_x = matrix[0][0] * (point.x - rotation_point.x) - matrix[0][1] * (point.y - rotation_point.y) + rotation_point.x;
+    double new_y = matrix[1][0] * (point.x - rotation_point.x) + matrix[1][1] * (point.y - rotation_point.y) + rotation_point.y;
+    return Point(new_x, new_y);
+}
+
+
+Point mirror_point(const Point& point, const double matrix[2][2])
+{
+    double new_x = matrix[0][0] * point.x + matrix[0][1] * point.y;
+    double new_y = matrix[1][0] * point.x + matrix[1][1] * point.y;
+
+    return Point(new_x, new_y);
+}
+
 Triangle::Triangle(Point p1, Point p2, Point p3)
 {
     pnt1 = p1;
@@ -145,61 +162,21 @@ Triangle Triangle::move(const Vector& vector) const
     return Triangle(new_pnt1, new_pnt2, new_pnt3);
 }
 
-Point Triangle::rotate_point(const Point& point, const Point& rotation_point, double cos_angle, double sin_angle) const
-{
-    double new_x = cos_angle * (point.x - rotation_point.x) - sin_angle * (point.y - rotation_point.y) + rotation_point.x;
-    double new_y = sin_angle * (point.x - rotation_point.x) + cos_angle * (point.y - rotation_point.y) + rotation_point.y;
-
-    return Point(new_x, new_y);
-}
-
-
-Triangle Triangle::rotated(double angle, const Point& rotation_point) const
-{
-    Triangle rotated_triangle(*this);
-    rotated_triangle.rotate(angle, rotation_point);
-    return rotated_triangle;
-}
-
-
-void Triangle::rotate(double angle, const Point& rotation_point)
+Triangle Triangle::rotate_with_matrix(double angle, const Point& rotation_point) const
 {
     double cos_angle = std::cos(angle);
     double sin_angle = std::sin(angle);
 
-    pnt1 = rotate_point(pnt1, rotation_point, cos_angle, sin_angle);
-    pnt2 = rotate_point(pnt2, rotation_point, cos_angle, sin_angle);
-    pnt3 = rotate_point(pnt3, rotation_point, cos_angle, sin_angle);
-}
-
-void Triangle::mirror(const Point& vector)
-{
-    double v_x = vector.x;
-    double v_y = vector.y;
-
-    double matrix[2][2] = {
-        {1 - 2 * v_x * v_x, -2 * v_x * v_y},
-        {-2 * v_x * v_y, 1 - 2 * v_y * v_y}
+    double rotation_matrix[2][2] = {
+        {cos_angle, -sin_angle},
+        {sin_angle, cos_angle}
     };
 
-    pnt1 = mirror_point(pnt1, matrix);
-    pnt2 = mirror_point(pnt2, matrix);
-    pnt3 = mirror_point(pnt3, matrix);
-}
+    Point new_pnt1 = rotate_point(pnt1, rotation_matrix, rotation_point);
+    Point new_pnt2 = rotate_point(pnt2, rotation_matrix, rotation_point);
+    Point new_pnt3 = rotate_point(pnt3, rotation_matrix, rotation_point);
 
-Triangle Triangle::mirror(const Point& vector) const
-{
-    Triangle mirrored_triangle = *this;
-    mirrored_triangle.mirror(vector);
-    return mirrored_triangle;
-}
-
-Point Triangle::mirror_point(const Point& point, const double matrix[2][2]) const
-{
-    double new_x = matrix[0][0] * point.x + matrix[0][1] * point.y;
-    double new_y = matrix[1][0] * point.x + matrix[1][1] * point.y;
-
-    return Point(new_x, new_y);
+    return Triangle(new_pnt1, new_pnt2, new_pnt3);
 }
 
 Triangle Triangle::mirror_with_matrix(const double matrix[2][2]) const

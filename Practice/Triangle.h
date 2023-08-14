@@ -30,6 +30,12 @@ double length(Point p1, Point p2);
 // Функция для получения корректных координат точки.
 Point get_valid_coordinates(const std::string& point_name);
 
+// Функция для поворота точки относительно заданной точки на заданный угол.
+Point rotate_point(const Point& point, const Point& rotation_point, const double matrix[2][2]);
+
+// Функция для отражения точки при помощи заданной матрицы.
+Point mirror_point(const Point& point, const double matrix[2][2]);
+
 class Triangle
 {
 public:
@@ -80,31 +86,16 @@ public:
     // Метод для перемещения треугольника на заданный вектор.
     Triangle move(const Vector& vector) const;
 
-    //
-    Point rotate_point(const Point& point, const Point& rotation_point, double cos_angle, double sin_angle) const;
+    // Метод для поворота треугольника на заданный угол относительно заданной точки.
+    Triangle rotate_with_matrix(double angle, const Point& rotation_point) const;
 
-    //
-    Triangle rotated(double angle, const Point& rotation_point) const;
+    // Метод для создания отраженной копии треугольника при помощи заданной матрицы.
+    Triangle mirror_with_matrix(const double matrix[2][2]) const;
 
-    //
-    void rotate(double angle, const Point& rotation_point);
-
-    //
+    // Методы для получения вершин треугольника.
     Point get_point1() const { return pnt1; }
     Point get_point2() const { return pnt2; }
     Point get_point3() const { return pnt3; }
-
-    //
-    void mirror(const Point& vector);
-
-    //
-    Triangle mirror(const Point& vector) const;
-
-    //
-    Point mirror_point(const Point& point, const double matrix[2][2]) const;
-
-    //
-    Triangle mirror_with_matrix(const double matrix[2][2]) const;
 
 private:
     Point pnt1;

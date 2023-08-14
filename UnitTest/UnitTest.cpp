@@ -87,5 +87,48 @@ namespace UnitTest
 
 			Assert::AreEqual(static_cast<int>(Triangle::Type::NotTriangle), static_cast<int>(result));
 		}
+		TEST_METHOD(TestMoveTriangle)
+		{
+			Point p1 = { 0.0, 0.0 };
+			Point p2 = { 1.0, 0.0 };
+			Point p3 = { 0.0, 1.0 };
+			Triangle triangle(p1, p2, p3);
+			Vector moveVector = { 2.0, 3.0 };
+			Triangle movedTriangle = triangle.move(moveVector);
+
+			Assert::AreEqual(2.0, movedTriangle.get_point1().x);
+			Assert::AreEqual(3.0, movedTriangle.get_point1().y);
+			Assert::AreEqual(3.0, movedTriangle.get_point2().x);
+			Assert::AreEqual(3.0, movedTriangle.get_point2().y);
+			Assert::AreEqual(2.0, movedTriangle.get_point3().x);
+			Assert::AreEqual(4.0, movedTriangle.get_point3().y);
+		}
+
+		TEST_METHOD(TestMirrorTriangle)
+		{
+			Point p1 = { 0.0, 0.0 };
+			Point p2 = { 1.0, 0.0 };
+			Point p3 = { 0.0, 1.0 };
+			Triangle triangle(p1, p2, p3);
+
+			double mirrorMatrix[2][2] = {
+				{-1, 0},
+				{0, 1}
+			};
+			Triangle mirroredTriangle = triangle.mirror_with_matrix(mirrorMatrix);
+
+			Assert::IsTrue(equal(mirroredTriangle.get_point1().x, 0.0, 1e-6));
+			Assert::IsTrue(equal(mirroredTriangle.get_point1().y, 0.0, 1e-6));
+			Assert::IsTrue(equal(mirroredTriangle.get_point2().x, -1.0, 1e-6));
+			Assert::IsTrue(equal(mirroredTriangle.get_point2().y, 0.0, 1e-6));
+			Assert::IsTrue(equal(mirroredTriangle.get_point3().x, 0.0, 1e-6));
+			Assert::IsTrue(equal(mirroredTriangle.get_point3().y, 1.0, 1e-6));
+		}
+
+	private:
+		static bool equal(double a, double b, double precision)
+		{
+			return std::abs(a - b) < precision;
+		}
 	};
 }
